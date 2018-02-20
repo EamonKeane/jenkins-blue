@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+admin.conf
+jenkins-0.13.2.tgz
+jenkins-secrets/config.xml
+jenkins-secrets/hudson.util.Secret
+jenkins-secrets/master.key
+jenkins-jobs/croc-hunter
+jenkins
