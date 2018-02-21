@@ -3,26 +3,40 @@
 SERVER_NAME=starfish-ci-cd-5
 SSH_KEY=7170
 SERVER_TYPE=cx41
-#hcloud ssh-key create --name Eamon@EamonMacBookPro --public-key-from-file ~/.ssh/id_rsa.pub
+
+for i in "$@"
+do
+case ${i} in
+    -SERVER_NAME=*|--SERVER_NAME=*)
+    SERVER_NAME="${i#*=}"
+    ;;
+    -SERVER_TYPE=*|--SERVER_TYPE=*)
+    SERVER_TYPE="${i#*=}"
+    ;;
+    -SSH_KEY=*|--SSH_KEY=*)
+    SSH_KEY="${i#*=}"
+    ;;
+esac
+done
+
+
 hcloud server create --name $SERVER_NAME --image ubuntu-16.04 --type $SERVER_TYPE --ssh-key $SSH_KEY
 # grep for IP Address
 hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b"
 
-JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
-echo $JENKINS_IP
+export JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
 
-sleep 10
+echo "waiting 60 seconds for hetzner to release lock on /var/lib/dpkg/lock due to fresh VM creation"
 
-ssh root@$JENKINS_IP
+secs=$((60))
+while [ $secs -gt 0 ]; do
+   echo -ne "$secs\033[0K\r"
+   sleep 1
+   : $((secs--))
+done
 
-ssh -o StrictHostKeyChecking=no root@$JENKINS_IP "bash -s" < kubeadm/kubeadm-install.sh
+ssh -o StrictHostKeyChecking=no root@$JENKINS_IP "bash -s" < kubeadm-install.sh
 
-scp root@$JENKINS_IP:/etc/kubernetes/admin.conf .
-
-KUBECONFIG=admin.conf
-
-kubectl create -f kubernetes-yaml/rbac-tiller.yaml
-
-helm init --service-account tiller
+scp -o StrictHostKeyChecking=no root@$JENKINS_IP:/etc/kubernetes/admin.conf $PWD
 
 
