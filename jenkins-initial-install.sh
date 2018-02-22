@@ -6,16 +6,16 @@ export KUBECONFIG=admin.conf
 # Kubeadm comes with RBAC turned on by default, so creating tiller RBAC account (cluster-admin)
 kubectl create -f kubernetes-yaml/rbac-tiller.yaml
 
-echo "waiting 10 seconds for hetzner to release lock on /var/lib/dpkg/lock due to fresh VM creation"
+helm init --wait --service-account tiller
 
-secs=$((60))
+echo "waiting 10 seconds for helm to initialise"
+
+secs=$((10))
 while [ $secs -gt 0 ]; do
    echo -ne "$secs\033[0K\r"
    sleep 1
    : $((secs--))
 done
-
-helm init --wait --service-account tiller
 
 # Copy the chart into the current working directory
 helm fetch stable/jenkins --version 0.13.2

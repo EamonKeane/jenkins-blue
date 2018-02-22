@@ -24,7 +24,7 @@ export SERVER_NAME=jenkins-blue-ocean # replace this with your preferred name
 export SSH_KEY=7170 #replace with your ssh-key id here
 export SERVER_TYPE=cx41 # Machine with 16GB of ram, 4 vCPU (25 euro per month)
 ```
-To install a single node kubeadm on hetzner run:
+To install a single node kubeadm on hetzner run (this will take around 4 minutes):
 ```bash
 ./kubernetes-hetzner.sh --SERVER_NAME=$SERVER_NAME --ssh-key=$SSH_KEY --SERVER_TYPE=$SERVER_TYPE
 ```
