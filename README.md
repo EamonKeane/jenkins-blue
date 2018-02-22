@@ -81,10 +81,28 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 ![](docs/copy-configuration-applysh.png)
 
 2. Copy the contents of jenkins-secrets/config.xml to jenkins/templates/config.yaml:
-![](docs/blue-ocean-credentials.png)
-![](docs/blue-ocean-credentials2.png)
+* Paste the following below data which will populate when helm installs:
+```text
+  {{- $files := .Files }}
+  {{- range tuple "blue-ocean-config.xml" }}
+  {{ . }}: |-
+    {{ $files.Get . }}
+  {{- end }}
+```
+![](docs/jenkins-config.png)
 
 3. Copy the contents of jenkins-jobs/croc-hunter/config.xml to jenkins-jobs.yaml
+```bash
+echo "    croc-hunter: |-" >> jenkins-jobs.yaml
+cat jenkins-jobs/croc-hunter/config.xml | sed 's/^/      /' >> jenkins-jobs.yaml
+```
+The jenkins-jobs.yaml should look like the below
+```text
+Master:
+  Jobs: |-
+    croc-hunter: |-
+      <?xml version='1.0' encoding='UTF-8'?>
+```
 ![](docs/copy-jenkins-job.png)
 
 # Nuke the jenkins cluster
@@ -112,7 +130,7 @@ github-webhook/create-github-webhook.sh --auth_token=PASTE_API_TOKEN --service_u
 ```
 
 # Make a change to your repository
-Touch a file on github.com to trigger a change to be sent to Jenkins Blue Ocean
+Touch a file on github.com in your croc-hunter fork to trigger a change to be sent to Jenkins Blue Ocean
 
 # Login to jenkins
 * Print out jenkins password:
@@ -121,4 +139,3 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 ```
 * Go to Jenkins url at: ```https://$JENKINS_URL```
 * Enter username ```admin``` and password from clipboard
-

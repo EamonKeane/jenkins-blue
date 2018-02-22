@@ -12,7 +12,7 @@ JENKINS_MASTER=$(kubectl get po -n jenkins --namespace jenkins -o json | jq -r '
 
 kubectl cp $JENKINS_MASTER:/var/jenkins_home/secrets/hudson.util.Secret jenkins-secrets/
 kubectl cp $JENKINS_MASTER:/var/jenkins_home/secrets/master.key jenkins-secrets/
-kubectl cp $JENKINS_MASTER:/var/jenkins_home/users/admin/config.xml jenkins-secrets/
+kubectl cp $JENKINS_MASTER:/var/jenkins_home/users/admin/config.xml jenkins/blue-ocean-config.xml
 kubectl cp $JENKINS_MASTER:/var/jenkins_home/jobs/ jenkins-jobs/
 
 kubectl create secret generic jenkins-secrets --namespace jenkins --from-file=jenkins-secrets/master.key --from-file=jenkins-secrets/hudson.util.Secret
