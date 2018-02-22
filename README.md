@@ -3,6 +3,12 @@ Quickly provision jenkins blue ocean on kubernetes bare metal with persistent co
 
 The example shown will use a single Hetzner server, but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
 
+# Checkout repository
+```bash
+git clone https://github.com/EamonKeane/jenkins-blue-ocean-kubernetes.git
+cd jenkins-blue-ocean-kubernetes
+```
+
 # Setup with Hetzner Cloud
 
 1. Register on Hetzner (https://www.hetzner.com/cloud)
@@ -21,11 +27,14 @@ To install a single node kubeadm on hetzner run:
 ```bash
 ./kubernetes-hetzner.sh --SERVER_NAME=$SERVER_NAME --ssh-key=$SSH_KEY --SERVER_TYPE=$SERVER_TYPE
 ```
-
+Export jenkins ip:
+```bash
+export JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+```
 # With ssh access to an ubuntu 16.04 machine
 ```bash
 export SSH_USER=root
-export JENKINS_IP=00.00.00.00
+export JENKINS_IP=00.00.00.00 #Enter your machine IP here
 ```
 To install a single node kubeadm run:
 ```bash
@@ -51,6 +60,11 @@ Prerequisites:
 Initial temporary installation of jenkins:
 ```bash
 ./jenkins-initial-install.sh 
+```
+Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
+```bash
+sed "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
+sed "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
 * Print out jenkins password:
 ```bash
