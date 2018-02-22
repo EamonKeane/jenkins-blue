@@ -57,7 +57,7 @@ Initial temporary installation of jenkins:
 printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 ```
 * Go to Jenkins url at: ```https://$JENKINS_URL```
-* Enter username ```admin``` and password from clipboard
+* Enter username ```admin``` and password from terminal
 
 1. Click on Jenkins Blue Ocean in side bar
 2. Click on Create Pipeline
@@ -73,7 +73,7 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 ```
 
 # Persist Jenkins data in helm chart
-1. Copy the below directly below into jenkins/templates/config.yaml:
+1. Copy the below two lines directly under apply_confg.sh into jenkins/templates/config.yaml. The new lines will become lines 144 and 145:
 ```text
     mkdir -p /var/jenkins_home/users/admin/;
     cp -n /var/jenkins_config/blue_ocean_credentials.xml /var/jenkins_home/users/admin/config.xml;
