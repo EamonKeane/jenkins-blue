@@ -1,5 +1,6 @@
 # jenkins-blue-ocean-kubernetes
 Quickly provision jenkins blue ocean on kubernetes bare metal with persistent configuration.
+Go from a simple 16.04 VM to a portable, scalable CI-CD pipeline with SSL in 10 minutes.
 
 The example shown will use a single Hetzner server, but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
 
@@ -36,7 +37,7 @@ export JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-
 export SSH_USER=root
 export JENKINS_IP=00.00.00.00 #Enter your machine IP here
 ```
-To install a single node kubeadm run:
+To install a single node kubeadm run (this will take around 4 minutes):
 ```bash
 ./kubernetes-ubuntu1604.sh --SSH_USER=$SSH_USER --JENKINS_IP=$JENKINS_IP
 ```
@@ -44,8 +45,13 @@ To install a single node kubeadm run:
 # Create DNS A-record
 1. Create a DNS A-record with the IP address of $JENKINS_IP
 ```bash
-export JENKINS_URL=jenkins.mysite.io
+export JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
 ```
+2. Confirm that the $JENKINS_IP record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
+```bash
+watch -n 5 dig $JENKINS_URL
+```
+![](docs/dig_jenkins_url.png)
 
 # Fork the croc-hunter repo from Lachlan Evanson
 This contains a lot of best practice and contains a Jenkinsfile which is required to demonstrate Blue Ocean functionality. Alternatively specify your own project which has a Jenkinsfile.
@@ -57,15 +63,22 @@ Prerequisites:
 * ```brew install helm```
 * ```brew install jq```
 
-Initial temporary installation of jenkins:
+Export the kubectl config copied from the kubeadm machine:
 ```bash
-./jenkins-initial-install.sh 
+export KUBECONFIG=admin.conf
 ```
+
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
 ```bash
 sed "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 sed "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
+
+Initial temporary installation of jenkins:
+```bash
+./jenkins-initial-install.sh 
+```
+
 * Print out jenkins password:
 ```bash
 printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
@@ -153,3 +166,8 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 ```
 * Go to Jenkins url at: ```https://$JENKINS_URL```
 * Enter username ```admin``` and password from clipboard
+
+# Tidying up
+```bash
+hcloud server delete $SERVER_NAME
+```
