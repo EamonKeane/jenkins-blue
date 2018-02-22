@@ -70,8 +70,8 @@ export KUBECONFIG=admin.conf
 
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
 ```bash
-sed "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
-sed "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
+sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
+sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
 
 Initial temporary installation of jenkins:

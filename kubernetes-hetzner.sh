@@ -37,6 +37,7 @@ done
 
 ssh -o StrictHostKeyChecking=no root@$JENKINS_IP "bash -s" < kubeadm-install.sh
 
+# Copy the kubernetes configuration from the kubeadm installation
 scp -o StrictHostKeyChecking=no root@$JENKINS_IP:/etc/kubernetes/admin.conf $PWD
 
 
