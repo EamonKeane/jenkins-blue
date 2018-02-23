@@ -18,7 +18,7 @@ cd jenkins-blue-ocean-kubernetes
 3. Install hcloud cli: brew install hetznercloud/tap/hcloud (https://github.com/hetznercloud/cli)
 4. ```hcloud ssh-key create --name $KEY_NAME --public-key-from-file ~/.ssh/id_rsa.pub```
 5. ```hcloud context create jenkins-blue-ocean```. Enter token when prompted
-6. Note your ssh-key ID returned from: ```hcloud server list```
+6. Note your ssh-key ID returned from: ```hcloud ssh-key list```
 
 ```bash
 SERVER_NAME=jenkins-blue-ocean # replace this with your preferred name
@@ -66,7 +66,7 @@ Prerequisites:
 
 Export the kubectl config copied from the kubeadm machine:
 ```bash
-KUBECONFIG=admin.conf
+export KUBECONFIG=admin.conf
 ```
 
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
@@ -80,11 +80,14 @@ Initial temporary installation of jenkins:
 ./jenkins-initial-install.sh 
 ```
 
+* Go to Jenkins url at: 
+```bash
+echo https://$JENKINS_URL
+```
 * Print out jenkins password:
 ```bash
 printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
 ```
-* Go to Jenkins url at: ```https://$JENKINS_URL```
 * Enter username ```admin``` and password from terminal
 
 1. Click on Jenkins Blue Ocean in side bar
