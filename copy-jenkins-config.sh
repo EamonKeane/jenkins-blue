@@ -8,6 +8,7 @@ kubectl cp jenkins/$JENKINS_MASTER:/var/jenkins_home/secrets/hudson.util.Secret 
 kubectl cp jenkins/$JENKINS_MASTER:/var/jenkins_home/secrets/master.key jenkins-secrets/
 kubectl cp jenkins/$JENKINS_MASTER:/var/jenkins_home/users/admin/config.xml jenkins-secrets/
 kubectl cp jenkins/$JENKINS_MASTER:/var/jenkins_home/credentials.xml jenkins-secrets/
+kubectl cp jenkins/$JENKINS_MASTER:/var/jenkins_home/jobs/ jenkins-jobs/
 
 # Create secrets to allow for decrypting stored configuration in the future (e.g. the Github API token)
 kubectl create secret generic jenkins-secrets --namespace jenkins --from-file=jenkins-secrets/master.key --from-file=jenkins-secrets/hudson.util.Secret

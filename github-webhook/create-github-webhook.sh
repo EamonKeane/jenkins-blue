@@ -1,31 +1,32 @@
 #!/usr/bin/env bash
-# this creates a github webhook that gets all events to a repository, useful with Jenkins Blue Ocean
+# this creates a github webhook that gets all events to a REPOSITORY, useful with Jenkins Blue Ocean
 
-auth_token=""
-service_url=""
-organisation=""
-repository=""
+AUTH_TOKEN=""
+SERVICE_URL=""
+ORGANISATION=""
+REPOSITORY=""
 
 for i in "$@"
 do
 case ${i} in
-    -auth_token=*|--auth_token=*)
-    auth_token="${i#*=}"
+    -AUTH_TOKEN=*|--AUTH_TOKEN=*)
+    AUTH_TOKEN="${i#*=}"
     ;;
-    -organisation=*|--organisation=*)
-    organisation="${i#*=}"
+    -ORGANISATION=*|--ORGANISATION=*)
+    ORGANISATION="${i#*=}"
     ;;
-    -service_url=*|--service_url=*)
-    service_url="${i#*=}"
+    -SERVICE_URL=*|--SERVICE_URL=*)
+    SERVICE_URL="${i#*=}"
     ;;
-    -repository=*|--repository=*)
-    repository="${i#*=}"
+    -REPOSITORY=*|--REPOSITORY=*)
+    REPOSITORY="${i#*=}"
     ;;
 esac
 done
 
-git_url="https://api.github.com/repos/${organisation}/${repository}/hooks"
-echo $git_url
+echo $ORGANISATION
+GIT_URL="https://api.github.com/repos/${ORGANISATION}/${REPOSITORY}/hooks"
+echo $GIT_URL
 
 generate_post_data()
 {
@@ -35,7 +36,7 @@ generate_post_data()
   "active": true,
   "events": ["*"],
   "config": {
-    "url": "${service_url}/github-webhook/",
+    "url": "https://${SERVICE_URL}/github-webhook/",
     "content_type": "application/x-www-form-urlencoded"
   }
 }
@@ -43,6 +44,6 @@ EOF
 }
 
 curl -H "Content-Type: application/x-www-form-urlencoded" \
-    -H "Authorization: token ${auth_token}" \
+    -H "Authorization: token ${AUTH_TOKEN}" \
     --data "$(generate_post_data)" \
-    ${git_url}
+    ${GIT_URL}

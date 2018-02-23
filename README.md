@@ -47,20 +47,20 @@ To install a single node kubeadm run (this will take around 4 minutes):
 ```
 
 # Create DNS A-record
-1. Create a DNS A-record with the IP address of $JENKINS_IP
+* Create a DNS A-record with the IP address of $JENKINS_IP
 ```bash
 JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
 ```
-2. Create a DNS A-record with the IP address for croc-hunter:
+* Create a DNS A-record with the IP address for croc-hunter:
 ```bash
 CROC_HUNTER_URL=croc-hunter.mysite.io # replace with your jenkins url
 ```
-3. Confirm that the $JENKINS_IP record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
+* Confirm that the $JENKINS_IP record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
 ```bash
 watch -n 5 dig $JENKINS_URL
 ```
 ![](docs/dig_jenkins_url.png)
-4. Confirm that the $CROC_HUNTER_URL record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
+* Confirm that the $CROC_HUNTER_URL record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
 ```bash
 watch -n 5 dig $CROC_HUNTER_URL
 ```
@@ -76,6 +76,11 @@ Prerequisites:
 * ```brew install helm```
 * ```brew install jq```
 
+# Export the kubectl config copied from the kubeadm machine:
+```bash
+export KUBECONFIG=admin.conf
+```
+
 # Create kubernetes image pull secret for croc-hunter
 ```bash
 DOCKER_SERVER=quay.io
@@ -85,18 +90,14 @@ DOCKER_EMAIL=.
 kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunter --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_PASSWORD --docker-email=$DOCKER_EMAIL
 ```
 
-Export the kubectl config copied from the kubeadm machine:
-```bash
-export KUBECONFIG=admin.conf
-```
-
+# Jenkins Installation and Configuration
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
 ```bash
 sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
 
-Initial temporary installation of jenkins:
+Initial temporary installation of jenkins. This also install nginx-ingress (configured for bare metal) and cert-manager :
 ```bash
 ./jenkins-initial-install.sh 
 ```
@@ -143,7 +144,7 @@ ORGANISATION=EamonKeane #replace this with your github username or organisation
 REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hunter
 ```
 ```bash
-github-webhook/create-github-webhook.sh --auth_token=PASTE_API_TOKEN --service_url=$JENKINS_URL --ORGANISATION=EamonKeane --repository=$REPOSITORY
+github-webhook/create-github-webhook.sh --AUTH_TOKEN=PASTE_API_TOKEN --SERVICE_URL=$JENKINS_URL --ORGANISATION=EamonKeane --REPOSITORY=$REPOSITORY
 ```
 
 # Copy jenkins configuration
@@ -190,6 +191,17 @@ helm del --purge jenkins
 ```
 
 # Install jenkins with values persisted
+* Create the persistent volume and persistent volume claim
+```bash
+kubectl create -f kubernetes-yaml/jenkins-pv.yaml
+kubectl create -f kubernetes-yaml/jenkins-pvc.yaml
+```
+* Check that the pvc is bound:
+```bash
+kubectl get pvc -n jenkins
+```
+![](docs/jenkins-pvc.png)
+* Install jenkins. Installation takes around 120 seconds (mostly due to jenkins startup time)
 ```bash
 helm install --name jenkins --namespace jenkins --wait --values jenkins-values.yaml --values jenkins-jobs.yaml jenkins/
 ```
