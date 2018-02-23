@@ -6,6 +6,8 @@ export KUBECONFIG=admin.conf
 # Kubeadm comes with RBAC turned on by default, so creating tiller RBAC account (cluster-admin)
 kubectl create -f kubernetes-yaml/rbac-tiller.yaml
 
+kubectl create namespace jenkins
+
 helm init --wait --service-account tiller --tiller-namespace jenkins
 
 echo "waiting 10 seconds for helm to initialise"

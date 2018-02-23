@@ -5,6 +5,9 @@ The Jenkins instance can be deleted and moved between clouds while retaining the
 
 The example shown will use a single Hetzner server, but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
 
+The sample CI-CD pipeline will uses Lachlan Evanson's excellent croc-hunter tutorial, which I would encourage you to go through after this.
+https://github.com/lachie83/croc-hunter
+
 # Checkout repository
 ```bash
 git clone https://github.com/EamonKeane/jenkins-blue-ocean-kubernetes.git
@@ -31,7 +34,7 @@ To install a single node kubeadm on hetzner run (this will take around 4 minutes
 ```
 Export jenkins ip:
 ```bash
-JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b");echo $JENKINS_IP
 ```
 # With ssh access to an ubuntu 16.04 machine
 ```bash
