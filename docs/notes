@@ -1,12 +1,27 @@
 Changed tag on lachlan k8s helm to 2.7.2 and kubectl to 1.9.3
 Change service account of slave pods to use jenkins-jenkins in Lachlan Evanson's code
 
+change the global pipeline to have helm init --serviceaccount tiller
+
 serviceAccount: 'jenkins-jenkins',
 
-    containerTemplate(name: 'helm', image: 'dtzar/helm-kubectl:2.8.1', command: 'cat', ttyEnabled: true),
+containerTemplate(name: 'helm', image: 'dtzar/helm-kubectl:2.8.1', command: 'cat', ttyEnabled: true),
 
 no quay credentials -
 
 create the quay credentials in jenkins
 copy the credentials.xml in the jenkins initial install
 
+remove the anchore from the Jenkinsfile due to:
+groovy:java.lang.NoSuchMethodError: No such DSL method 'anchore' found among steps
+
+change the helm image to be your own image
+
+create the image pull secret in the croc-hunter namespace.
+change imagepullsecrets in croc-hunter repo.
+
+DOCKER_SERVER=quay.io
+DOCKER_USERNAME=eamonkeane+crochunter
+DOCKER_PASSWORD=B01TBRQ2DH9QS4634H0GE8VBNDG1U1NMLG6X7NMGLVRYU652W5V0CVSRQOZOUUZD
+DOCKER_EMAIL=.
+kubectl create secret docker-registry croc-hunter-secrets --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_PASSWORD --docker-email=$DOCKER_EMAIL --namespace=croc-hunter

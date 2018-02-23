@@ -32,7 +32,7 @@ To install a single node kubeadm on hetzner run (this will take around 4 minutes
 ```bash
 ./kubernetes-hetzner.sh --SERVER_NAME=$SERVER_NAME --ssh-key=$SSH_KEY --SERVER_TYPE=$SERVER_TYPE
 ```
-Export jenkins ip:
+Set the jenkins ip variable:
 ```bash
 JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b");echo $JENKINS_IP
 ```
@@ -67,6 +67,15 @@ Prerequisites:
 * ```brew install helm```
 * ```brew install jq```
 
+# Create kubernetes image pull secret for croc-hunter
+```bash
+DOCKER_SERVER=quay.io
+DOCKER_USERNAME=eamonkeane+crochunter
+DOCKER_PASSWORD=
+DOCKER_EMAIL=.
+kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunter --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_PASSWORD --docker-email=$DOCKER_EMAIL
+```
+
 Export the kubectl config copied from the kubeadm machine:
 ```bash
 export KUBECONFIG=admin.conf
@@ -100,6 +109,33 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 5. Login to Github, enter token name, click generate token, copy token to clipboard
 6. Paste token into jenkins and click connect
 7. Select organisation and croc-hunter repo
+
+
+*Add docker credentials to jenkins:
+1. Click on Credentials
+2. Click on Jenkins link
+3. Click on Global Credentials
+4. Click add credentials
+5. Select Username  and password
+6. Enter $DOCKER_USERNAME and $DOCKER_PASSWORD as above
+7. Enter ID as quay_creds
+8. Enter description as your choice e.g. croc-hunter-quay-creds
+9. Press OK
+
+
+# Add github webhook
+1. Create a token on github with access to read/write repo hooks
+* Go to ```Github.com```, click on ```settings```, then ```developer settings```, then ```personal access tokens```, then ```generate new token```, tick read/write admin hooks, click generate token and copy to clipboard
+* Export your github username. 
+```bash
+ORGANISATION=EamonKeane #replace this with your github username or organisation
+```
+```bash
+REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hunter
+```
+```bash
+github-webhook/create-github-webhook.sh --auth_token=PASTE_API_TOKEN --service_url=$JENKINS_URL --ORGANISATION=EamonKeane --repository=$REPOSITORY
+```
 
 # Copy jenkins configuration
 ```bash
@@ -147,20 +183,6 @@ helm del --purge jenkins
 # Install jenkins with values persisted
 ```bash
 helm install --name jenkins --namespace jenkins --wait --values jenkins-values.yaml --values jenkins-jobs.yaml jenkins/
-```
-
-# Add github webhook
-1. Create a token on github with access to read/write repo hooks
-* Go to ```Github.com```, click on ```settings```, then ```developer settings```, then ```personal access tokens```, then ```generate new token```, tick read/write admin hooks, click generate token and copy to clipboard
-* Export your github username. 
-```bash
-ORGANISATION=EamonKeane #replace this with your github username or organisation
-```
-```bash
-REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hunter
-```
-```bash
-github-webhook/create-github-webhook.sh --auth_token=PASTE_API_TOKEN --service_url=$JENKINS_URL --ORGANISATION=EamonKeane --repository=$REPOSITORY
 ```
 
 # Make a change to your repository

@@ -8,7 +8,7 @@ kubectl create -f kubernetes-yaml/rbac-tiller.yaml
 
 kubectl create namespace jenkins
 
-helm init --wait --service-account tiller --tiller-image lachlanevenson/k8s-helm:v2.7.2
+helm init --wait --service-account tiller --tiller-image=gcr.io/kubernetes-helm/tiller:v2.8.1
 
 echo "waiting 10 seconds for helm to initialise"
 
