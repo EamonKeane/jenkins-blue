@@ -7,3 +7,4 @@ jenkins-secrets/hudson.util.Secret
 jenkins-secrets/master.key
 jenkins-jobs/croc-hunter
 jenkins
+/keys

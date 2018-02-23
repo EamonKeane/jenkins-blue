@@ -1,1 +1,12 @@
 Changed tag on lachlan k8s helm to 2.7.2 and kubectl to 1.9.3
+Change service account of slave pods to use jenkins-jenkins in Lachlan Evanson's code
+
+serviceAccount: 'jenkins-jenkins',
+
+    containerTemplate(name: 'helm', image: 'dtzar/helm-kubectl:2.8.1', command: 'cat', ttyEnabled: true),
+
+no quay credentials -
+
+create the quay credentials in jenkins
+copy the credentials.xml in the jenkins initial install
+
