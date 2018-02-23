@@ -51,11 +51,20 @@ To install a single node kubeadm run (this will take around 4 minutes):
 ```bash
 JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
 ```
-2. Confirm that the $JENKINS_IP record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
+2. Create a DNS A-record with the IP address for croc-hunter:
+```bash
+CROC_HUNTER_URL=croc-hunter.mysite.io # replace with your jenkins url
+```
+3. Confirm that the $JENKINS_IP record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
 ```bash
 watch -n 5 dig $JENKINS_URL
 ```
 ![](docs/dig_jenkins_url.png)
+4. Confirm that the $CROC_HUNTER_URL record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
+```bash
+watch -n 5 dig $CROC_HUNTER_URL
+```
+
 
 # Fork the croc-hunter repo from Lachlan Evanson
 This contains a lot of best practice and contains a Jenkinsfile which is required to demonstrate Blue Ocean functionality. Alternatively specify your own project which has a Jenkinsfile.
