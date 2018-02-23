@@ -1,6 +1,7 @@
 # jenkins-blue-ocean-kubernetes
 Quickly provision jenkins blue ocean on kubernetes bare metal with persistent configuration.
-Go from a simple 16.04 VM to a portable, scalable CI-CD pipeline with SSL in 10 minutes.
+Go from a simple 16.04 VM to a portable, scalable declarative CI-CD pipeline with SSL and automatic building on push to github in 10 minutes. 
+The Jenkins instance can be deleted and moved between clouds while retaining the job configuration.
 
 The example shown will use a single Hetzner server, but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
 
@@ -20,9 +21,9 @@ cd jenkins-blue-ocean-kubernetes
 6. Note your ssh-key ID returned from: ```hcloud server list```
 
 ```bash
-export SERVER_NAME=jenkins-blue-ocean # replace this with your preferred name
-export SSH_KEY=7170 #replace with your ssh-key id here
-export SERVER_TYPE=cx41 # Machine with 16GB of ram, 4 vCPU (25 euro per month)
+SERVER_NAME=jenkins-blue-ocean # replace this with your preferred name
+SSH_KEY=7170 #replace with your ssh-key id here
+SERVER_TYPE=cx41 # Machine with 16GB of ram, 4 vCPU (25 euro per month)
 ```
 To install a single node kubeadm on hetzner run (this will take around 4 minutes):
 ```bash
@@ -30,12 +31,12 @@ To install a single node kubeadm on hetzner run (this will take around 4 minutes
 ```
 Export jenkins ip:
 ```bash
-export JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
 ```
 # With ssh access to an ubuntu 16.04 machine
 ```bash
-export SSH_USER=root
-export JENKINS_IP=00.00.00.00 #Enter your machine IP here
+SSH_USER=root
+JENKINS_IP=00.00.00.00 #Enter your machine IP here
 ```
 To install a single node kubeadm run (this will take around 4 minutes):
 ```bash
@@ -45,7 +46,7 @@ To install a single node kubeadm run (this will take around 4 minutes):
 # Create DNS A-record
 1. Create a DNS A-record with the IP address of $JENKINS_IP
 ```bash
-export JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
+JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
 ```
 2. Confirm that the $JENKINS_IP record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
 ```bash
@@ -65,7 +66,7 @@ Prerequisites:
 
 Export the kubectl config copied from the kubeadm machine:
 ```bash
-export KUBECONFIG=admin.conf
+KUBECONFIG=admin.conf
 ```
 
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
@@ -147,10 +148,10 @@ helm install --name jenkins --namespace jenkins --wait --values jenkins-values.y
 * Go to ```Github.com```, click on ```settings```, then ```developer settings```, then ```personal access tokens```, then ```generate new token```, tick read/write admin hooks, click generate token and copy to clipboard
 * Export your github username. 
 ```bash
-export ORGANISATION=EamonKeane #replace this with your github username or organisation
+ORGANISATION=EamonKeane #replace this with your github username or organisation
 ```
 ```bash
-export REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hunter
+REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hunter
 ```
 ```bash
 github-webhook/create-github-webhook.sh --auth_token=PASTE_API_TOKEN --service_url=$JENKINS_URL --ORGANISATION=EamonKeane --repository=$REPOSITORY
