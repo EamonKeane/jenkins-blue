@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 SSH_USER=""
-IP=""
+JENKINS_IP=""
 
 for i in "$@"
 do
 case ${i} in
     -SSH_USER=*|--SSH_USER=*)
-    SERVER_NAME="${i#*=}"
+    SSH_USER="${i#*=}"
     ;;
     -JENKINS_IP=*|--JENKINS_IP=*)
-    SERVER_TYPE="${i#*=}"
+    JENKINS_IP="${i#*=}"
     ;;
 esac
 done

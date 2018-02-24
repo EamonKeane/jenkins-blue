@@ -69,6 +69,15 @@ watch -n 5 dig $CROC_HUNTER_URL
 # Fork the croc-hunter repo from Lachlan Evanson
 This contains a lot of best practice and contains a Jenkinsfile which is required to demonstrate Blue Ocean functionality. Alternatively specify your own project which has a Jenkinsfile.
 ```https://github.com/lachie83/croc-hunter/```
+* Make a private image repository (e.g. on Quay.io or Docker Hub) and change the deployment value in the croc-hunter helm chart
+```bash
+cd ..
+git clone https://github.com/EamonKeane/croc-hunter.git
+cd croc-hunter
+sed -i '' "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
+IMAGE_REPOSITORY=quay.io/eamonkeane/croc-hunter
+sed -i '' "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml
+```
 
 # Install jenkins to configure jobs and retrieve secrets
 Prerequisites:
@@ -78,6 +87,8 @@ Prerequisites:
 
 # Export the kubectl config copied from the kubeadm machine:
 ```bash
+cd ..
+cd jenkins-blue-ocean-kubernetes
 export KUBECONFIG=admin.conf
 ```
 
@@ -97,7 +108,7 @@ sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
 
-Initial temporary installation of jenkins. This also install nginx-ingress (configured for bare metal) and cert-manager :
+Initial temporary installation of jenkins. This takes approx 4 minutes. This also installs nginx-ingress (configured for bare metal) and cert-manager (configured to auto-provision SSL certs) :
 ```bash
 ./jenkins-initial-install.sh 
 ```
@@ -112,16 +123,7 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 ```
 * Enter username ```admin``` and password from terminal
 
-1. Click on Jenkins Blue Ocean in side bar
-2. Click on Create Pipeline
-3. Click on Github
-4. Click on 'create an access key here'
-5. Login to Github, enter token name, click generate token, copy token to clipboard
-6. Paste token into jenkins and click connect
-7. Select organisation and croc-hunter repo
-
-
-*Add docker credentials to jenkins:
+* Add docker credentials to jenkins:
 1. Click on Credentials
 2. Click on Jenkins link
 3. Click on Global Credentials
@@ -131,6 +133,15 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 7. Enter ID as quay_creds
 8. Enter description as your choice e.g. croc-hunter-quay-creds
 9. Press OK
+
+* Configure Jenkins pipeline to talk to croc-hunter
+1. Click on Jenkins Blue Ocean in side bar
+2. Click on Create Pipeline
+3. Click on Github
+4. Click on 'create an access key here'
+5. Login to Github, enter token name, click generate token, copy token to clipboard
+6. Paste token into jenkins and click connect
+7. Select organisation and croc-hunter repo
 
 
 # Add github webhook
@@ -153,14 +164,7 @@ github-webhook/create-github-webhook.sh --AUTH_TOKEN=PASTE_API_TOKEN --SERVICE_U
 ```
 
 # Persist Jenkins data in helm chart
-1. Copy the below two lines directly under apply_confg.sh into jenkins/templates/config.yaml. The new lines will become lines 144 and 145:
-```text
-    mkdir -p /var/jenkins_home/users/admin/;
-    cp -n /var/jenkins_config/blue_ocean_credentials.xml /var/jenkins_home/users/admin/config.xml;
-```
-![](docs/copy-configuration-applysh.png)
-
-2. Copy the contents of jenkins-secrets/config.xml to jenkins/templates/config.yaml:
+* Copy the contents of jenkins-secrets/config.xml to jenkins/templates/config.yaml:
 * Paste the following below data which will populate when helm installs:
 ```text
   {{- $files := .Files }}
@@ -171,7 +175,15 @@ github-webhook/create-github-webhook.sh --AUTH_TOKEN=PASTE_API_TOKEN --SERVICE_U
 ```
 ![](docs/jenkins-config.png)
 
-3. Copy the contents of jenkins-jobs/croc-hunter/config.xml to jenkins-jobs.yaml
+
+* Copy the below two lines directly under apply_confg.sh into jenkins/templates/config.yaml. The new lines will become lines 144 and 145:
+```text
+    mkdir -p /var/jenkins_home/users/admin/;
+    cp -n /var/jenkins_config/blue_ocean_credentials.xml /var/jenkins_home/users/admin/config.xml;
+```
+![](docs/copy-configuration-applysh.png)
+
+* Copy the contents of jenkins-jobs/croc-hunter/config.xml to jenkins-jobs.yaml
 ```bash
 echo "    croc-hunter: |-" >> jenkins-jobs.yaml
 cat jenkins-jobs/croc-hunter/config.xml | sed 's/^/      /' >> jenkins-jobs.yaml

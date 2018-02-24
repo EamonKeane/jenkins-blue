@@ -8,3 +8,4 @@ jenkins-secrets/master.key
 jenkins-jobs/croc-hunter
 jenkins
 /keys
+/docs/notes
