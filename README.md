@@ -11,6 +11,8 @@ https://github.com/lachie83/croc-hunter
 # Checkout repository
 ```bash
 git clone https://github.com/EamonKeane/jenkins-blue-ocean-kubernetes.git
+```
+```bash
 cd jenkins-blue-ocean-kubernetes
 ```
 
@@ -25,9 +27,14 @@ cd jenkins-blue-ocean-kubernetes
 
 ```bash
 SERVER_NAME=jenkins-blue-ocean # replace this with your preferred name
+```
+```bash
 SSH_KEY=7170 #replace with your ssh-key id here
+```
+```bash
 SERVER_TYPE=cx41 # Machine with 16GB of ram, 4 vCPU (25 euro per month)
 ```
+
 To install a single node kubeadm on hetzner run (this will take around 4 minutes):
 ```bash
 ./kubernetes-hetzner.sh --SERVER_NAME=$SERVER_NAME --ssh-key=$SSH_KEY --SERVER_TYPE=$SERVER_TYPE
@@ -39,8 +46,11 @@ JENKINS_IP=$(hcloud server list | grep -E $SERVER_NAME | grep -oE "\b([0-9]{1,3}
 # With ssh access to an ubuntu 16.04 machine
 ```bash
 SSH_USER=root
+```
+```bash
 JENKINS_IP=00.00.00.00 #Enter your machine IP here
 ```
+
 To install a single node kubeadm run (this will take around 4 minutes):
 ```bash
 ./kubernetes-ubuntu1604.sh --SSH_USER=$SSH_USER --JENKINS_IP=$JENKINS_IP
@@ -72,10 +82,20 @@ This contains a lot of best practice and contains a Jenkinsfile which is require
 * Make a private image repository (e.g. on Quay.io or Docker Hub) and change the deployment value in the croc-hunter helm chart
 ```bash
 cd ..
+```
+```bash
 git clone https://github.com/EamonKeane/croc-hunter.git
+```
+```bash
 cd croc-hunter
+```
+```bash
 sed -i '' "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
+```
+```bash
 IMAGE_REPOSITORY=quay.io/eamonkeane/croc-hunter
+```
+```bash
 sed -i '' "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml
 ```
 
@@ -87,17 +107,24 @@ Prerequisites:
 
 # Export the kubectl config copied from the kubeadm machine:
 ```bash
-cd ..
-cd jenkins-blue-ocean-kubernetes
-export KUBECONFIG=admin.conf
+cd ../jenkins-blue-ocean-kubernetes
+export KUBECONFIG=$PWD/admin.conf
 ```
 
 # Create kubernetes image pull secret for croc-hunter
 ```bash
 DOCKER_SERVER=quay.io
+```
+```bash
 DOCKER_USERNAME=eamonkeane+crochunter
+```
+```bash
 DOCKER_PASSWORD=
-DOCKER_EMAIL=.
+```
+```bash
+DOCKER_EMAIL=. # This is not important and can be left as a dot
+```
+```bash
 kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunter --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_PASSWORD --docker-email=$DOCKER_EMAIL
 ```
 
@@ -105,8 +132,11 @@ kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunte
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
 ```bash
 sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
+```
+```bash
 sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
+
 
 Initial temporary installation of jenkins. This takes approx 4 minutes. This also installs nginx-ingress (configured for bare metal) and cert-manager (configured to auto-provision SSL certs) :
 ```bash
@@ -147,15 +177,19 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 # Add github webhook
 1. Create a token on github with access to read/write repo hooks
 * Go to ```Github.com```, click on ```settings```, then ```developer settings```, then ```personal access tokens```, then ```generate new token```, tick read/write admin hooks, click generate token and copy to clipboard
-* Export your github username. 
+* Set your github details:
+```bash
+AUTH_TOKEN= #put your github API token here
+```
 ```bash
 ORGANISATION=EamonKeane #replace this with your github username or organisation
 ```
 ```bash
 REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hunter
 ```
+
 ```bash
-github-webhook/create-github-webhook.sh --AUTH_TOKEN=PASTE_API_TOKEN --SERVICE_URL=$JENKINS_URL --ORGANISATION=EamonKeane --REPOSITORY=$REPOSITORY
+github-webhook/create-github-webhook.sh --AUTH_TOKEN=$AUTH_TOKEN --SERVICE_URL=$JENKINS_URL --ORGANISATION=EamonKeane --REPOSITORY=$REPOSITORY
 ```
 
 # Copy jenkins configuration
@@ -186,8 +220,11 @@ github-webhook/create-github-webhook.sh --AUTH_TOKEN=PASTE_API_TOKEN --SERVICE_U
 * Copy the contents of jenkins-jobs/croc-hunter/config.xml to jenkins-jobs.yaml
 ```bash
 echo "    croc-hunter: |-" >> jenkins-jobs.yaml
+```
+```bash
 cat jenkins-jobs/croc-hunter/config.xml | sed 's/^/      /' >> jenkins-jobs.yaml
 ```
+
 The jenkins-jobs.yaml should look like the below
 ```text
 Master:
@@ -206,8 +243,11 @@ helm del --purge jenkins
 * Create the persistent volume and persistent volume claim
 ```bash
 kubectl create -f kubernetes-yaml/jenkins-pv.yaml
+```
+```bash
 kubectl create -f kubernetes-yaml/jenkins-pvc.yaml
 ```
+
 * Check that the pvc is bound:
 ```bash
 kubectl get pvc -n jenkins
@@ -218,9 +258,6 @@ kubectl get pvc -n jenkins
 helm install --name jenkins --namespace jenkins --wait --values jenkins-values.yaml --values jenkins-jobs.yaml jenkins/
 ```
 
-# Make a change to your repository
-Touch a file on github.com in your croc-hunter fork to trigger a change to be sent to Jenkins Blue Ocean
-
 # Login to jenkins
 * Print out jenkins password:
 ```bash
@@ -229,7 +266,21 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 * Go to Jenkins url at: ```https://$JENKINS_URL```
 * Enter username ```admin``` and password from clipboard
 
+# Make a change to croc-hunter repository
+```bash
+cd ../croc-hunter
+```
+```bash
+echo "change -- ignore" >> README.md
+```
+```bash
+git add -A; git commit -m "made change to README.md"; git push origin master
+```
+
+Go back to jenkins dashboard, click on Jenkins blue ocean and you will now see master building. 
+
 # Tidying up
 ```bash
 hcloud server delete $SERVER_NAME
 ```
+Delete github API tokens and keys from bash history or from github.
