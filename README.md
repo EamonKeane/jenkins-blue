@@ -36,6 +36,7 @@ SERVER_TYPE=cx41 # Machine with 16GB of ram, 4 vCPU (25 euro per month)
 ```
 
 To install a single node kubeadm on hetzner run (this will take around 4 minutes):
+https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 ```bash
 ./kubernetes-hetzner.sh --SERVER_NAME=$SERVER_NAME --ssh-key=$SSH_KEY --SERVER_TYPE=$SERVER_TYPE
 ```
@@ -51,13 +52,14 @@ SSH_USER=root
 JENKINS_IP=00.00.00.00 #Enter your machine IP here
 ```
 
-To install a single node kubeadm run (this will take around 4 minutes):
+To install a single node kubernetes kubeadm cluster run (this will take around 4 minutes):
+https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
 ```bash
 ./kubernetes-ubuntu1604.sh --SSH_USER=$SSH_USER --JENKINS_IP=$JENKINS_IP
 ```
 
 # Create DNS A-record
-* Create a DNS A-record with the IP address of $JENKINS_IP
+* Create a DNS A-record with the IP address of ```$JENKINS_IP```
 ```bash
 JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
 ```
@@ -65,38 +67,50 @@ JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
 ```bash
 CROC_HUNTER_URL=croc-hunter.mysite.io # replace with your jenkins url
 ```
-* Confirm that the $JENKINS_IP record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
+* Confirm that the ```$JENKINS_IP``` record exists at ```$JENKINS_URL``` (this may take a minute or two depending on your DNS provider)
 ```bash
 watch -n 5 dig $JENKINS_URL
 ```
 ![](docs/dig_jenkins_url.png)
-* Confirm that the $CROC_HUNTER_URL record exists at $JENKINS_URL (this may take a minute or two depending on your DNS provider)
+* Confirm that the ```$CROC_HUNTER_URL``` record exists at ```$JENKINS_URL``` (this may take a minute or two depending on your DNS provider)
 ```bash
 watch -n 5 dig $CROC_HUNTER_URL
 ```
 
 
-# Fork the croc-hunter repo from Lachlan Evanson
+# Fork the croc-hunter repo with example application
 This contains a lot of best practice and contains a Jenkinsfile which is required to demonstrate Blue Ocean functionality. Alternatively specify your own project which has a Jenkinsfile.
 ```https://github.com/lachie83/croc-hunter/```
 * Make a private image repository (e.g. on Quay.io or Docker Hub) and change the deployment value in the croc-hunter helm chart
+* Fork the following repository on github.com:
+```text
+https://github.com/EamonKeane/croc-hunter
+```
+Returning to the shell, run the following commands:
+```bash
+ORGANISATION= # enter your organisation (github username)
+```
 ```bash
 cd ..
 ```
 ```bash
-git clone https://github.com/EamonKeane/croc-hunter.git
+git clone https://github.com/$ORGANISATION/croc-hunter.git
 ```
 ```bash
 cd croc-hunter
 ```
 ```bash
-sed -i '' "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
+sed -i'' -e "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
 ```
 ```bash
 IMAGE_REPOSITORY=quay.io/eamonkeane/croc-hunter
 ```
 ```bash
-sed -i '' "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml
+sed -i'' -e "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml
+```
+* Commit the changes to your croc-hunter fork.
+```bash
+git add -A; git commit -m "changed croc hunter url and image repo"; git push origin master
 ```
 
 # Install jenkins to configure jobs and retrieve secrets
@@ -125,18 +139,20 @@ DOCKER_PASSWORD=
 DOCKER_EMAIL=. # This is not important and can be left as a dot
 ```
 ```bash
+kubectl create namespace croc-hunter
+```
+```bash
 kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunter --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_PASSWORD --docker-email=$DOCKER_EMAIL
 ```
 
 # Jenkins Installation and Configuration
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
 ```bash
-sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
+sed -i'' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 ```
 ```bash
-sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
+sed -i'' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
-
 
 Initial temporary installation of jenkins. This takes approx 4 minutes. This also installs nginx-ingress (configured for bare metal) and cert-manager (configured to auto-provision SSL certs) :
 ```bash
@@ -192,6 +208,13 @@ REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hun
 github-webhook/create-github-webhook.sh --AUTH_TOKEN=$AUTH_TOKEN --SERVICE_URL=$JENKINS_URL --ORGANISATION=EamonKeane --REPOSITORY=$REPOSITORY
 ```
 
+# Verify the application deploys
+Click on the master branch on Jenkins blue ocean. After approximately 5 minutes, the application and test will have completed. 
+The croc-hunter application will be available on ```https://$CROC_HUNTER_URL```
+* Jenkins Blue Ocean Master Branch:
+![](docs/croc-hunter-master-branch.png)
+* ```https://$CROC_HUNTER_URL```
+
 # Copy jenkins configuration
 ```bash
 ./copy-jenkins-config.sh
@@ -234,7 +257,7 @@ Master:
 ```
 ![](docs/copy-jenkins-job.png)
 
-# Nuke the jenkins cluster
+# Nuke the jenkins installation
 ```bash
 helm del --purge jenkins
 ```
