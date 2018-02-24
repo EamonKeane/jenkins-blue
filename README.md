@@ -248,7 +248,7 @@ kubectl create -f kubernetes-yaml/jenkins-pv.yaml
 kubectl create -f kubernetes-yaml/jenkins-pvc.yaml
 ```
 
-* Check that the pvc is bound:
+* Check that the persistent volume claim is bound:
 ```bash
 kubectl get pvc -n jenkins
 ```
@@ -265,6 +265,8 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 ```
 * Go to Jenkins url at: ```https://$JENKINS_URL```
 * Enter username ```admin``` and password from clipboard
+
+* Check that the docker credentials quay_creds has been persisted in the credentials section.
 
 # Make a change to croc-hunter repository
 ```bash
