@@ -81,7 +81,7 @@ watch -n 5 dig $CROC_HUNTER_URL
 # Fork the croc-hunter repo with example application
 This contains a lot of best practice and contains a Jenkinsfile which is required to demonstrate Blue Ocean functionality. Alternatively specify your own project which has a Jenkinsfile.
 ```https://github.com/lachie83/croc-hunter/```
-* Make a private image repository (e.g. on Quay.io or Docker Hub) and change the deployment value in the croc-hunter helm chart
+* Make a private image repository (e.g. on Quay.io or Docker Hub e.g quay.io/eamonkeane/croc-hunter)
 * Fork the following repository on github.com:
 ```text
 https://github.com/EamonKeane/croc-hunter
