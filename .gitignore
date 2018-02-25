@@ -1,5 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
-/.idea/*
+.idea/
 admin.conf
 jenkins-0.13.2.tgz
 jenkins-secrets/config.xml
