@@ -101,13 +101,13 @@ cd croc-hunter
 ```
 (sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md of sed -i '' with sed -i'' -e https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
 ```bash
-sed -i '' "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
+sed -i '' -e "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
 ```
 ```bash
 IMAGE_REPOSITORY=quay.io/eamonkeane/croc-hunter
 ```
 ```bash
-sed -i '' "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml;
+sed -i '' -e "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml;
 ```
 * Commit the changes to your croc-hunter fork.
 ```bash
@@ -149,10 +149,10 @@ kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunte
 # Jenkins Installation and Configuration
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
 ```bash
-sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
+sed -i '' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 ```
 ```bash
-sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
+sed -i '' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
 
 Initial temporary installation of jenkins. This takes approx 4 minutes. This also installs nginx-ingress (configured for bare metal) and cert-manager (configured to auto-provision SSL certs) :

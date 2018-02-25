@@ -19,7 +19,7 @@ kubectl create secret generic jenkins-secrets --namespace jenkins --from-file=je
 
 helm del --purge jenkins
 
-helm install --name jenkins --namespace jenkins --values jenkins-values.yaml --values jenkins-jobs.yaml jenkins/
+helm upgrade --install --namespace jenkins --values jenkins-values.yaml --values jenkins-jobs.yaml jenkins jenkins/
 
 # Copy jenkins-job yaml to jenkins-jobs.yaml
 

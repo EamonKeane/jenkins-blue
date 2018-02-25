@@ -25,7 +25,7 @@ helm fetch stable/jenkins --version 0.13.2
 tar -xvzf jenkins-0.13.2.tgz
 
 # Update the master deployment to apps/v1 to allow helm --wait to work correctly. https://github.com/kubernetes/helm/issues/3173
-sed -i'' -e 's#extensions/v1beta1#apps/v1#g' jenkins/templates/jenkins-master-deployment.yaml
+sed -i '' -e 's#extensions/v1beta1#apps/v1#g' jenkins/templates/jenkins-master-deployment.yaml
 
 # Install nginx ingress with settings for bare metal. See for more detail: https://github.com/kubernetes/charts/tree/master/stable/nginx-ingress
 echo "installing nginx-ingress"
