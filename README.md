@@ -10,10 +10,10 @@ https://github.com/lachie83/croc-hunter
 
 # Checkout repository
 ```bash
-git clone https://github.com/EamonKeane/jenkins-blue-ocean-kubernetes.git
+git clone https://github.com/EamonKeane/jenkins-blue.git
 ```
 ```bash
-cd jenkins-blue-ocean-kubernetes
+cd jenkins-blue
 ```
 
 # Setup with Hetzner Cloud
@@ -127,7 +127,7 @@ Prerequisites:
 
 # Export the kubectl config copied from the kubeadm machine:
 ```bash
-cd ../jenkins-blue-ocean-kubernetes
+cd ../jenkins-blue
 export KUBECONFIG=$PWD/admin.conf
 ```
 
