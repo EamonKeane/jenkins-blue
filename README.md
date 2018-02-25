@@ -152,8 +152,8 @@ kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunte
 ```
 
 # Jenkins Installation and Configuration
-Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
-(sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md and one in jenkins-initial-install of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
+Replace your jenkins url in the hostname, TLS secret name, and TLS secret sections of jenkins-values-initial.yaml and jenkins-values.yaml
+* (sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md and one in jenkins-initial-install of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
 ```bash
 sed -i '' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 ```
@@ -198,7 +198,7 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 
 
 # Add github webhook
-1. Create a token on github with access to read/write repo hooks
+* Create a token on github with access to read/write repo hooks
 * Go to ```Github.com```, click on ```settings```, then ```developer settings```, then ```personal access tokens```, then ```generate new token```, tick read/write admin hooks, click generate token and copy to clipboard
 * Set your github details:
 ```bash
