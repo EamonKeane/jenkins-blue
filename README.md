@@ -100,19 +100,21 @@ git clone https://github.com/$ORGANISATION/croc-hunter.git
 cd croc-hunter
 ```
 ```bash
+IMAGE_REPOSITORY_ORGANISATION=eamonkeane
+```
+```bash
+IMAGE_REPOSITORY_URL=quay.io/eamonkeane/croc-hunter
+```
+Update the values for croc-hunter to match your values
+```bash
 jq ".app.hostname = \"$CROC_HUNTER_URL\"" Jenkinsfile.json > Jenkinsfile.json
 ```
 ```bash
 jq ".container_repo.master_acct = \"$IMAGE_REPOSITORY_ORGANISATION\"" Jenkinsfile.json > Jenkinsfile.json
 ```
 ```bash
-IMAGE_REPOSITORY_ORGANISATION=eamonkeane
+jq ".container_repo.image = \"$IMAGE_REPOSITORY_URL\"" Jenkinsfile.json > Jenkinsfile.json
 ```
-```bash
-IMAGE_REPOSITORY_URL=quay.io/eamonkeane/croc-hunter
-```
-* Change the image tag in charts/croc-hunter/values.yaml to ```IMAGE_REPOSITORY_URL```
-
 * Commit the changes to your croc-hunter fork.
 ```bash
 git add -A; git commit -m "changed croc hunter url and image repo"; git push origin master
