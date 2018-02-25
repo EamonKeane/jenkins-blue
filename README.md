@@ -32,7 +32,7 @@ SERVER_NAME=jenkins-blue-ocean # replace this with your preferred name
 SSH_KEY=7170 #replace with your ssh-key id here
 ```
 ```bash
-SERVER_TYPE=cx41 # Machine with 16GB of ram, 4 vCPU (25 euro per month)
+SERVER_TYPE=cx41 # Machine with 16GB of ram, 4 vCPU, 160 GB disk (no commitment, $25 per month, 80% less than t2.xlarge on EC2)
 ```
 
 To install a single node kubeadm on hetzner run (this will take around 4 minutes):
