@@ -24,7 +24,7 @@ change imagepullsecrets in croc-hunter repo.
 
 DOCKER_SERVER=quay.io
 DOCKER_USERNAME=eamonkeane+crochunter
-DOCKER_PASSWORD=B01TBRQ2DH9QS4634H0GE8VBNDG1U1NMLG6X7NMGLVRYU652W5V0CVSRQOZOUUZD
+DOCKER_PASSWORD=
 DOCKER_EMAIL=.
 kubectl create namespace croc-hunter
 kubectl create secret docker-registry croc-hunter-secrets --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_PASSWORD --docker-email=$DOCKER_EMAIL --namespace=croc-hunter

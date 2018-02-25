@@ -37,4 +37,4 @@ helm install --name cert-manager --namespace cert-manager stable/cert-manager --
 kubectl create -f kubernetes-yaml/acme-prod-cluster-issuer.yaml
 
 echo "waiting for helm to install jenkins, takes approximately 120 seconds"
-helm install --wait --timeout 300 --name jenkins --namespace jenkins --values jenkins-values-initial.yaml jenkins/
+helm upgrade --install --wait --timeout 300 --namespace jenkins --values jenkins-values-initial.yaml jenkins jenkins/

@@ -53,7 +53,7 @@ JENKINS_IP=00.00.00.00 #Enter your machine IP here
 ```
 
 To install a single node kubernetes kubeadm cluster run (this will take around 4 minutes):
-https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/
+(kubernetes install commands from: https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
 ```bash
 ./kubernetes-ubuntu1604.sh --SSH_USER=$SSH_USER --JENKINS_IP=$JENKINS_IP
 ```
@@ -88,7 +88,7 @@ https://github.com/EamonKeane/croc-hunter
 ```
 Returning to the shell, run the following commands:
 ```bash
-ORGANISATION= # enter your organisation (github username)
+ORGANISATION=EamonKeane # enter your organisation (github username)
 ```
 ```bash
 cd ..
@@ -99,15 +99,15 @@ git clone https://github.com/$ORGANISATION/croc-hunter.git
 ```bash
 cd croc-hunter
 ```
-(sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
+(sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md of sed -i '' with sed -i'' -e https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
 ```bash
-sed -i '' -e "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
+sed -i '' "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
 ```
 ```bash
 IMAGE_REPOSITORY=quay.io/eamonkeane/croc-hunter
 ```
 ```bash
-sed -i '' -e "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml;
+sed -i '' "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml;
 ```
 * Commit the changes to your croc-hunter fork.
 ```bash
@@ -116,8 +116,8 @@ git add -A; git commit -m "changed croc hunter url and image repo"; git push ori
 
 # Install jenkins to configure jobs and retrieve secrets
 Prerequisites:
-* ```brew install kubectl```
-* ```brew install helm```
+* ```brew install kubectl``` (> version 1.9.3)
+* ```brew install kubernetes-helm``` (> version 2.8.1)
 * ```brew install jq```
 
 # Export the kubectl config copied from the kubeadm machine:
@@ -149,10 +149,10 @@ kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunte
 # Jenkins Installation and Configuration
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
 ```bash
-sed -i '' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
+sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 ```
 ```bash
-sed -i '' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
+sed -i '' "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values-initial.yaml
 ```
 
 Initial temporary installation of jenkins. This takes approx 4 minutes. This also installs nginx-ingress (configured for bare metal) and cert-manager (configured to auto-provision SSL certs) :
