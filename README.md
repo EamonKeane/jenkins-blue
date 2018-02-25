@@ -105,7 +105,7 @@ IMAGE_REPOSITORY_ORGANISATION=eamonkeane
 ```bash
 IMAGE_REPOSITORY_URL=quay.io/eamonkeane/croc-hunter
 ```
-Update the values for croc-hunter to match your values
+Update the values for croc-hunter to match your values (```brew install jq```)
 ```bash
 jq ".app.hostname = \"$CROC_HUNTER_URL\"" Jenkinsfile.json > tmp.json && mv tmp.json Jenkinsfile.json
 ```
@@ -124,7 +124,6 @@ git add -A; git commit -m "changed croc hunter url and image repo"; git push ori
 Prerequisites:
 * ```brew install kubectl``` (> version 1.9.3)
 * ```brew install kubernetes-helm``` (> version 2.8.1)
-* ```brew install jq```
 
 # Export the kubectl config copied from the kubeadm machine:
 ```bash
