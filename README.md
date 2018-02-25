@@ -122,8 +122,8 @@ git add -A; git commit -m "changed croc hunter url and image repo"; git push ori
 
 # Install jenkins to configure jobs and retrieve secrets
 Prerequisites:
-* ```brew install kubectl``` (> version 1.9.3)
-* ```brew install kubernetes-helm``` (> version 2.8.1)
+* ```brew install kubectl``` (>= version 1.9.3)
+* ```brew install kubernetes-helm``` (>= version 2.8.1)
 
 # Export the kubectl config copied from the kubeadm machine:
 ```bash
