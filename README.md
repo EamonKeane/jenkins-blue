@@ -215,6 +215,7 @@ The croc-hunter application will be available on ```https://$CROC_HUNTER_URL```
 * Jenkins Blue Ocean Master Branch:
 ![](docs/croc-hunter-master-branch.png)
 * ```https://$CROC_HUNTER_URL```
+![](docs/croc-hunter-release.png)
 
 # Copy jenkins configuration
 ```bash
