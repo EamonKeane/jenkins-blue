@@ -1,11 +1,11 @@
 # jenkins-blue-ocean-kubernetes
 Quickly provision jenkins blue ocean on kubernetes bare metal with persistent configuration.
-Go from a simple 16.04 VM to a portable, scalable declarative CI-CD pipeline with SSL and automatic building on push to github in 10 minutes. 
+Go from a simple 16.04 VM to a portable, scalable declarative CI-CD pipeline with SSL and automatic building on push to github. The tutorial takes around 20 minutes. 
 The Jenkins instance can be deleted and moved between clouds while retaining the job configuration.
 
 The example shown will use a single Hetzner server, but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
 
-The sample CI-CD pipeline will uses Lachlan Evanson's excellent croc-hunter tutorial, which I would encourage you to go through after this.
+The sample CI-CD pipeline and application uses Lachlan Evanson's excellent croc-hunter tutorial, which I would encourage you to go through after this.
 https://github.com/lachie83/croc-hunter
 
 # Checkout repository
@@ -107,13 +107,13 @@ IMAGE_REPOSITORY_URL=quay.io/eamonkeane/croc-hunter
 ```
 Update the values for croc-hunter to match your values
 ```bash
-jq ".app.hostname = \"$CROC_HUNTER_URL\"" Jenkinsfile.json > Jenkinsfile.json
+jq ".app.hostname = \"$CROC_HUNTER_URL\"" Jenkinsfile.json > tmp.json && mv tmp.json Jenkinsfile.json
 ```
 ```bash
-jq ".container_repo.master_acct = \"$IMAGE_REPOSITORY_ORGANISATION\"" Jenkinsfile.json > Jenkinsfile.json
+jq ".container_repo.master_acct = \"$IMAGE_REPOSITORY_ORGANISATION\"" Jenkinsfile.json > tmp.json && mv tmp.json Jenkinsfile.json
 ```
 ```bash
-jq ".container_repo.image = \"$IMAGE_REPOSITORY_URL\"" Jenkinsfile.json > Jenkinsfile.json
+jq ".container_repo.image = \"$IMAGE_REPOSITORY_URL\"" Jenkinsfile.json > tmp.json && mv tmp.json Jenkinsfile.json
 ```
 * Commit the changes to your croc-hunter fork.
 ```bash
