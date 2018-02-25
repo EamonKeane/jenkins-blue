@@ -1,4 +1,4 @@
-# jenkins-blue-ocean-kubernetes
+# Jenkins Blue Ocean Kubernetes Bare Metal
 Quickly provision jenkins blue ocean on kubernetes bare metal with persistent configuration.
 Go from a simple 16.04 VM to a portable, scalable declarative CI-CD pipeline with SSL and automatic building on push to github. The tutorial takes around 20 minutes. 
 The Jenkins instance can be deleted and moved between clouds while retaining the job configuration.
@@ -20,7 +20,7 @@ cd jenkins-blue-ocean-kubernetes
 
 1. Register on Hetzner (https://www.hetzner.com/cloud)
 2. Get API token from dashboard
-3. Install hcloud cli: brew install hetznercloud/tap/hcloud (https://github.com/hetznercloud/cli)
+3. Install hcloud cli: ```brew install hetznercloud/tap/hcloud``` (https://github.com/hetznercloud/cli)
 4. ```hcloud ssh-key create --name $KEY_NAME --public-key-from-file ~/.ssh/id_rsa.pub```
 5. ```hcloud context create jenkins-blue-ocean```. Enter token when prompted
 6. Note your ssh-key ID returned from: ```hcloud ssh-key list```
@@ -213,7 +213,7 @@ REPOSITORY=croc-hunter #replace this with your github repo if not using croc-hun
 ```
 
 ```bash
-github-webhook/create-github-webhook.sh --AUTH_TOKEN=$AUTH_TOKEN --SERVICE_URL=$JENKINS_URL --ORGANISATION=EamonKeane --REPOSITORY=$REPOSITORY
+github-webhook/create-github-webhook.sh --AUTH_TOKEN=$AUTH_TOKEN --SERVICE_URL=$JENKINS_URL --ORGANISATION=$ORGANISATION --REPOSITORY=$REPOSITORY
 ```
 
 # Verify the application deploys
@@ -242,7 +242,7 @@ The croc-hunter application will be available on ```https://$CROC_HUNTER_URL```
 ![](docs/jenkins-config.png)
 
 
-* Copy the below two lines directly under apply_confg.sh into jenkins/templates/config.yaml. The new lines will become lines 144 and 145:
+* Copy the below two lines directly under apply_confg.sh into jenkins/templates/config.yaml. The new lines will become lines 149 and 150:
 ```text
     mkdir -p /var/jenkins_home/users/admin/;
     cp -n /var/jenkins_config/blue_ocean_credentials.xml /var/jenkins_home/users/admin/config.xml;
@@ -287,18 +287,8 @@ kubectl get pvc -n jenkins
 ![](docs/jenkins-pvc.png)
 * Install jenkins. Installation takes around 120 seconds (mostly due to jenkins startup time)
 ```bash
-helm install --name jenkins --namespace jenkins --wait --values jenkins-values.yaml --values jenkins-jobs.yaml jenkins/
+helm upgrade --install --namespace jenkins --wait --values jenkins-values.yaml --values jenkins-jobs.yaml jenkins jenkins/
 ```
-
-# Login to jenkins
-* Print out jenkins password:
-```bash
-printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
-```
-* Go to Jenkins url at: ```https://$JENKINS_URL```
-* Enter username ```admin``` and password from clipboard
-
-* Check that the docker credentials quay_creds has been persisted in the credentials section.
 
 # Make a change to croc-hunter repository
 ```bash
@@ -311,7 +301,17 @@ echo "change -- ignore" >> README.md
 git add -A; git commit -m "made change to README.md"; git push origin master
 ```
 
-Go back to jenkins dashboard, click on Jenkins blue ocean and you will now see master building. 
+# Login to jenkins
+* Print out jenkins password:
+```bash
+printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+```
+* Go to Jenkins url at: ```https://$JENKINS_URL```
+* Enter username ```admin``` and password from clipboard
+
+* Check that the docker credentials quay_creds has been persisted in the credentials section.
+
+Click on Jenkins blue ocean and you will now see master building and the croc-hunter app will update.
 
 # Tidying up
 ```bash
