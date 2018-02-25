@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3cd7865e-a582-415b-bc8f-f15e72f8b87b" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="$PROJECT_DIR$/jenkins-initial-install.sh" afterPath="$PROJECT_DIR$/jenkins-initial-install.sh" />
-      <change beforePath="$PROJECT_DIR$/jenkins-install.sh" afterPath="$PROJECT_DIR$/jenkins-install.sh" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -121,8 +119,8 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="FIRST">
-              <first_editor relative-caret-position="149">
-                <caret line="157" column="37" lean-forward="false" selection-start-line="157" selection-start-column="37" selection-end-line="157" selection-end-column="37" />
+              <first_editor relative-caret-position="187">
+                <caret line="101" column="153" lean-forward="true" selection-start-line="101" selection-start-column="153" selection-end-line="101" selection-end-column="153" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -716,8 +714,8 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="FIRST">
-          <first_editor relative-caret-position="149">
-            <caret line="157" column="37" lean-forward="false" selection-start-line="157" selection-start-column="37" selection-end-line="157" selection-end-column="37" />
+          <first_editor relative-caret-position="187">
+            <caret line="101" column="153" lean-forward="true" selection-start-line="101" selection-start-column="153" selection-end-line="101" selection-end-column="153" />
             <folding />
           </first_editor>
           <second_editor />

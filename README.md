@@ -99,7 +99,7 @@ git clone https://github.com/$ORGANISATION/croc-hunter.git
 ```bash
 cd croc-hunter
 ```
-(sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md of sed -i '' with sed -i'' -e https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
+(sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md and one in jenkins-initial-install of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
 ```bash
 sed -i '' -e "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
 ```
