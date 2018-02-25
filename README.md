@@ -3,7 +3,7 @@ Quickly provision jenkins blue ocean on kubernetes bare metal v1.9 with RBAC and
 Go from a simple 16.04 VM to a portable, scalable declarative CI-CD pipeline on kubernetes with SSL and automatic building on push to github. The tutorial takes around 20 minutes. 
 The Jenkins instance can be deleted and moved between clouds while retaining the job configuration.
 
-The example shown will use a single Hetzner server, but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
+The example shown will use a single Hetzner server ($0.04/hour), but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
 
 The sample CI-CD pipeline and application uses Lachlan Evanson's excellent croc-hunter tutorial, which I would encourage you to go through after this.
 https://github.com/lachie83/croc-hunter
