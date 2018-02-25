@@ -99,16 +99,20 @@ git clone https://github.com/$ORGANISATION/croc-hunter.git
 ```bash
 cd croc-hunter
 ```
-(sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md and one in jenkins-initial-install of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
 ```bash
-sed -i '' -e "s/croc-hunter\.squareroute\.io/$CROC_HUNTER_URL/g" Jenkinsfile.json
+jq ".app.hostname = \"$CROC_HUNTER_URL\"" Jenkinsfile.json > Jenkinsfile.json
 ```
 ```bash
-IMAGE_REPOSITORY=quay.io/eamonkeane/croc-hunter
+jq ".container_repo.master_acct = \"$IMAGE_REPOSITORY_ORGANISATION\"" Jenkinsfile.json > Jenkinsfile.json
 ```
 ```bash
-sed -i '' -e "s#quay\.io/eamonkeane/croc-hunter#$IMAGE_REPOSITORY#g" charts/croc-hunter/values.yaml;
+IMAGE_REPOSITORY_ORGANISATION=eamonkeane
 ```
+```bash
+IMAGE_REPOSITORY_URL=quay.io/eamonkeane/croc-hunter
+```
+* Change the image tag in charts/croc-hunter/values.yaml to ```IMAGE_REPOSITORY_URL```
+
 * Commit the changes to your croc-hunter fork.
 ```bash
 git add -A; git commit -m "changed croc hunter url and image repo"; git push origin master
@@ -148,6 +152,7 @@ kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunte
 
 # Jenkins Installation and Configuration
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret section of jenkins-values-initial.yaml and jenkins-values.yaml:
+(sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md and one in jenkins-initial-install of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
 ```bash
 sed -i '' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 ```
