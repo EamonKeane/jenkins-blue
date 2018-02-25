@@ -8,8 +8,8 @@ The example shown will use a single Hetzner server ($0.04/hour), but this first 
 The sample CI-CD pipeline and application uses Lachlan Evanson's excellent croc-hunter tutorial, which I would encourage you to go through after this.
 https://github.com/lachie83/croc-hunter
 
+* Asciicast with all commands run below is here (tokens shown in asciicast have been revoked):
 [![asciicast](https://asciinema.org/a/5g5tbqwFObfUqDHhMr13lXUCm.png)](https://asciinema.org/a/5g5tbqwFObfUqDHhMr13lXUCm)
-(tokens shown in asciicast have been revoked)
 
 # Checkout repository
 ```bash
