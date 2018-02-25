@@ -188,7 +188,7 @@ printf $(kubectl get secret --namespace jenkins jenkins-jenkins -o jsonpath="{.d
 9. Press OK
 
 * Configure Jenkins pipeline to talk to croc-hunter
-1. Click on Jenkins Blue Ocean in side bar
+1. Click on Jenkins Blue Ocean in side bar on home page
 2. Click on Create Pipeline
 3. Click on Github
 4. Click on 'create an access key here'
