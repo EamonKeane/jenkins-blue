@@ -232,8 +232,7 @@ The croc-hunter application will be available on ```https://$CROC_HUNTER_URL```
 ```
 
 # Persist Jenkins data in helm chart
-* Copy the contents of jenkins-secrets/config.xml to jenkins/templates/config.yaml:
-* Paste the following below data which will populate when helm installs:
+* Paste the following below the data section in jenkins/templates/config.yaml which will populate when helm installs:
 ```text
   {{- $files := .Files }}
   {{- range tuple "blue-ocean-config.xml" }}
@@ -251,7 +250,7 @@ The croc-hunter application will be available on ```https://$CROC_HUNTER_URL```
 ```
 ![](docs/copy-configuration-applysh.png)
 
-* Copy the contents of jenkins-jobs/croc-hunter/config.xml to jenkins-jobs.yaml
+* Copy the contents of jenkins-jobs/croc-hunter/config.xml to jenkins-jobs.yaml by using the following commands:
 ```bash
 echo "    croc-hunter: |-" >> jenkins-jobs.yaml
 ```
