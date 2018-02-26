@@ -68,7 +68,7 @@ JENKINS_URL=jenkins.mysite.io # replace with your jenkins url
 ```
 * Create a DNS A-record with the IP address for croc-hunter:
 ```bash
-CROC_HUNTER_URL=croc-hunter.mysite.io # replace with your jenkins url
+CROC_HUNTER_URL=croc-hunter.mysite.io # replace with your croc-hunter url
 ```
 * Confirm that the ```$JENKINS_IP``` record exists at ```$JENKINS_URL``` (this may take a minute or two depending on your DNS provider)
 ```bash
@@ -156,7 +156,7 @@ kubectl create secret docker-registry croc-hunter-secrets --namespace=croc-hunte
 
 # Jenkins Installation and Configuration
 Replace your jenkins url in the hostname, TLS secret name, and TLS secret sections of jenkins-values-initial.yaml and jenkins-values.yaml
-* (sed commands shown for mac gnu BSD - on linux replace the four instances in this Readme.md and one in jenkins-initial-install of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
+* (sed commands shown for mac gnu BSD - on linux replace the two instances in this Readme.md and one in jenkins-initial-install of sed -i '' with sed -i'' https://stackoverflow.com/questions/4247068/sed-command-with-i-option-failing-on-mac-but-works-on-linux)
 ```bash
 sed -i '' -e "s/jenkins\.mysite\.io/$JENKINS_URL/g" jenkins-values.yaml
 ```
