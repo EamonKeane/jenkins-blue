@@ -1,4 +1,4 @@
-# Jenkins Blue Ocean Kubernetes Bare Metal
+# Jenkins Blue Ocean Kubernetes Ubuntu 16.04
 Quickly provision jenkins blue ocean on kubernetes bare metal v1.9 with RBAC and with persistent configuration.
 Go from a simple 16.04 VM to a portable, scalable declarative CI-CD pipeline on kubernetes with SSL and automatic building on push to github. The tutorial takes around 20 minutes. 
 The Jenkins instance can be deleted and moved between clouds while retaining the job configuration.
