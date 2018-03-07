@@ -1,6 +1,6 @@
 # Jenkins Blue Ocean Kubernetes Ubuntu 16.04
 Quickly provision Jenkins blue ocean on kubernetes v1.9 with RBAC and with persistent configuration.
-Go from a simple 16.04 VM to a portable, scalable CI-CD pipeline on kubernetes with SSL and automatic building on push to github. The tutorial takes around 20 minutes. 
+Go from a simple 16.04 VM to a portable, scalable CI-CD pipeline on kubernetes with automated SSL provisioned and automatic building on push to github. The tutorial takes around 20 minutes. 
 The Jenkins instance can be deleted and moved between clouds while retaining the job configuration via the excellent Jenkins Helm chart ```https://github.com/kubernetes/charts/tree/master/stable/jenkins```.
 
 The example shown will use a single Hetzner server ($0.04/hour), but this first step can skipped, and ssh access to an ubuntu 16.04 machine can be used instead.
